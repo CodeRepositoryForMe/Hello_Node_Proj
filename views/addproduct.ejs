@@ -1,0 +1,29 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <header class="main-header">
+        <%- include('includes/navigation.ejs') %>
+    </header>
+    <main class="main">
+        <form class="product-form" action="/product" method="POST">
+            <div class="form-control">
+                <label title="Title"name="Title">Title</label>
+                <input type="text" name="Title" title="Title">
+            </div>
+            <div class="form-control">
+                <label title="Cost"name="Cost">Cost</label>
+                <input type="text" name="Cost" title="Cost">
+            </div>
+            <div class="form-control">
+                <label title="Description"name="Description">Description</label>
+                <input type="text" name="Description" title="Description">
+            </div>
+            <div class="form-control">
+                <label title="ProductLink"name="ProductLink">Product Link</label>
+                <input type="url" name="ProductLink" title="ProductLink">
+            </div>
+            <button class="button" type="submit">Add Product</button>
+        </form>
+    </main>
+</body>
+</html>
