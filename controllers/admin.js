@@ -26,13 +26,19 @@ exports.exePostProducts = (req, res, next) => {
 };
 
 exports.exeGetToPutProduct = (req, res, next) => {
-    console.log("Get product To Put");
-    res.render("admin/edit-Product",{
-        pageTitle : "Edit Product",
-        pageName : "editProduct"
+  console.log("Get product To Put");
+
+  productObj.getAllProducts((products) => {
+    console.log("Product list" + products);
+    res.render("admin/products", {
+      pageTitle: "Edit Product",
+      prods: products,
+      pageName: "editProduct",
+      catelog: true,
     });
+  });
 };
 
 exports.exePutProduct = (req, res, next) => {
-    console.log("Put this product");
+  console.log("Put this product");
 };

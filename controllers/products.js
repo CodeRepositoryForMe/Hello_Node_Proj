@@ -1,30 +1,5 @@
 const productObj = require("../models/product");
 
-exports.exePostProducts = (req, res, next) => {
-  console.log("Product Added !!!");
-  console.log(req.body);
-  //res.redirect("/catelog");
-  // products.push({
-  //   title: req.body.Title,
-  //   cost: req.body.Cost,
-  //   description: req.body.Description,
-  //   url: req.body.ProductLink,
-  // });
-  const product = new productObj(
-    (title = req.body.Title),
-    (cost = req.body.Cost),
-    (description = req.body.Description),
-    (url = req.body.ProductLink)
-  );
-
-  product.save();
-
-  console.log("From Add Product " + product);
-  //res.sendFile(path.join(rootPath,'views','catelog.html'));  // This is HTML file
-  //https://elcopcbonline.com/photos/product/4/176/4.jpg
-  res.redirect("/catelog");
-};
-
 exports.exeGetProducts = (req, res, next) => {
   console.log("This is product page!!!");
   //res.send('<form method="POST", action="./product"><input type="Text" name="Title"><button type="Submit">Add product</button></form>');
@@ -62,11 +37,11 @@ exports.exeCart = (req, res, next) => {
   });
 };
 
-exports.exeOrder = (req, res, next) => {
+exports.exeOrders = (req, res, next) => {
   console.log("This is order page");
-  res.render("shop/order", {
-    pageTitle: "Order",
-    pageName: "order"
+  res.render("shop/orders", {
+    pageTitle: "Orders",
+    pageName: "orders"
   });
 };
 
