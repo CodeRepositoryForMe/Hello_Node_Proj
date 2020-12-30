@@ -1,10 +1,10 @@
 <%- include('../includes/head.ejs') %>
 </head>
-<body>
+<body class="body">
     <header class="main-header">
         <%- include('../includes/navigation.ejs') %>
     </header>
-    <main class="main">
+    <main>
         <form class="product-form" action="/addproduct" method="POST">
             <div class="form-control">
                 <label title="Title"name="Title">Title</label>
@@ -25,5 +25,4 @@
             <button class="button" type="submit">Add Product</button>
         </form>
     </main>
-</body>
-</html>
+<%- include('../includes/end.ejs') %>

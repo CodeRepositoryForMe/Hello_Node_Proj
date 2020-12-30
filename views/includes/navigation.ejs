@@ -1,11 +1,38 @@
-<nav class = "mail-header_nav">
-    <ul class="main-header__item-list">
-        <li class="main-header__item"><a class="<%= pageName === 'index' ? 'active' : '' %>" href="/index">Home</a></li>
-        <li class="main-header__item"><a class="<%= pageName === 'catelog' ? 'active' : '' %>" href="/catelog">Product Catelog</a></li>
-        <li class="main-header__item"><a class="<%= pageName === 'product' ? 'active' : '' %>" href="/addproduct">Add Product</a></li>
-        <li class="main-header__item"><a class="<%= pageName === 'editproduct' ? 'active' : '' %>" href="/editproduct">Edit Product</a></li>
-        <li class="main-header__item"><a class="<%= pageName === 'cart' ? 'active' : '' %>" href="/cart">Cart</a></li>
-        <li class="main-header__item"><a class="<%= pageName === 'orders' ? 'active' : '' %>" href="/orders">Your Orders</a></li>
-        <li class="main-header__item"><a class="<%= pageName === 'checkout' ? 'active' : '' %>" href="/checkout">Checkout</a></li>
+<div class="backdrop"></div>
+<header class="main-header">
+    <button id="side-menu-toggle">Menu</button>
+    <nav class = "main-header_nav">
+        <ul class="main-header__item-list">
+            <li class="main-header__item"><a class="<%= pageName === 'index' ? 'active' : '' %>" href="/index">Home</a></li>
+            <li class="main-header__item"><a class="<%= pageName === 'catelog' ? 'active' : '' %>" href="/catelog">Product Catelog</a></li>
+            <li class="main-header__item"><a class="<%= pageName === 'product' ? 'active' : '' %>" href="/addproduct">Add Product</a></li>
+            <li class="main-header__item"><a class="<%= pageName === 'editproduct' ? 'active' : '' %>" href="/editproduct">Edit Product</a></li>
+            <li class="main-header__item"><a class="<%= pageName === 'cart' ? 'active' : '' %>" href="/cart">Cart</a></li>
+            <li class="main-header__item"><a class="<%= pageName === 'orders' ? 'active' : '' %>" href="/orders">Your Orders</a></li>
+            <li class="main-header__item"><a class="<%= pageName === 'checkout' ? 'active' : '' %>" href="/checkout">Checkout</a></li>
+        </ul>
+    </nav>
+</header>
+<nav class="mobile-nav">
+    <ul class="mobile-nav__item-list">
+        <li class="mobile-nav__item">
+            <a class="<%= pageName === 'index' ? 'active' : '' %>" href="/index">Home</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= pageName === 'catelog' ? 'active' : '' %>" href="/catelog">Product Catelog</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= pageName === 'cart' ? 'active' : '' %>" href="/cart">Cart</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= pageName === 'orders' ? 'active' : '' %>" href="/orders">Your Orders</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= pageName === 'product' ? 'active' : '' %>" href="/addproduct">Add Product</a></li>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= pageName === 'product' ? 'active' : '' %>" href="/admin/products">Admin Products
+            </a>
+        </li>
     </ul>
 </nav>
