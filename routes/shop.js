@@ -15,4 +15,5 @@ router.use("/cart", productController.exeCart);
 router.use("/orders", productController.exeOrders);
 router.use("/checkout", productController.exeCheckout);
 router.use("/index", productController.exeIndex);
+router.use("/product/:productid", productController.exeGetProduct);
 module.exports = router;

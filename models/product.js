@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { v4 : uuidv4 } = require("uuid");
 
 const filePath = path.join(
   path.dirname(require.main.filename),
@@ -35,6 +36,7 @@ module.exports = class product {
   }
 
   save() {
+    this.id = uuidv4();
     getProductFromFile((products) => {
       products.push(this);
       fs.writeFile(filePath, JSON.stringify(products), (err) => {
@@ -46,4 +48,12 @@ module.exports = class product {
   static getAllProducts(callback) {
     getProductFromFile(callback);
   }
+
+  static findProductByID(id, callback) {
+    getProductFromFile(products => {
+        const product = products.find(p => p.id === id );
+        callback(product);
+    });      
+  }
+
 };

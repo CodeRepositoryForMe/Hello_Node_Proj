@@ -11,6 +11,18 @@ exports.exeGetProducts = (req, res, next) => {
   });
 };
 
+exports.exeGetProduct = (req, res, next) =>{
+    const productID = req.params.productid;
+    console.log(productID);
+    productObj.findProductByID(productID, product =>{
+        res.render("shop/product-details",{
+            pageTitle: "Product Details",
+            pageName: "pageDetails",
+            product : product
+        })
+    });
+}
+
 exports.exeShowProductCatelog = (req, res, next) => {
   console.log("This is catelog !!!");
   //res.sendFile(path.join(rootPath,'views','catelog.html'));
