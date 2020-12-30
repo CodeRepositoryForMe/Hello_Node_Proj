@@ -29,7 +29,7 @@ exports.exeGetProducts = (req, res, next) => {
   console.log("This is product page!!!");
   //res.send('<form method="POST", action="./product"><input type="Text" name="Title"><button type="Submit">Add product</button></form>');
   //res.sendFile(path.join(rootPath,'views','addproduct.html')); // This is HTML file
-  res.render("addproduct", {
+  res.render("admin/add-product", {
     pageTitle: "Add Product",
     pageName: "product",
     addproduct: true,
@@ -43,7 +43,7 @@ exports.exeShowProductCatelog = (req, res, next) => {
 
   productObj.getAllProducts((products) => {
     console.log("Product list" + products);
-    res.render("catelog", {
+    res.render("shop/catelog", {
       pageTitle: "Catelog",
       prods: products,
       doctTitle: "Shopping Catalog",
@@ -51,5 +51,37 @@ exports.exeShowProductCatelog = (req, res, next) => {
       hasProduct: products.length > 0,
       catelog: true,
     });
+  });
+};
+
+exports.exeCart = (req, res, next) => {
+  console.log("This is cart page");
+  res.render("shop/cart", {
+    pageTitle: "Cart",
+    pageName: "cart"
+  });
+};
+
+exports.exeOrder = (req, res, next) => {
+  console.log("This is order page");
+  res.render("shop/order", {
+    pageTitle: "Order",
+    pageName: "order"
+  });
+};
+
+exports.exeCheckout = (req, res, next) =>{
+    console.log("This is check-out page");
+    res.render("shop/checkout",{
+        pageTitle: "Checkout",
+        pageName: "checkout"
+    });
+}
+
+exports.exeIndex = (req, res, next) => {
+  console.log("This is index page");
+  res.render("shop/index", {
+    pageTitle: "Index",
+    pageName: "index"
   });
 };

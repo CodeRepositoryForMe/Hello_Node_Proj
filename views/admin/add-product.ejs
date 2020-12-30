@@ -1,11 +1,11 @@
-<%- include('includes/head.ejs') %>
+<%- include('../includes/head.ejs') %>
 </head>
 <body>
     <header class="main-header">
-        <%- include('includes/navigation.ejs') %>
+        <%- include('../includes/navigation.ejs') %>
     </header>
     <main class="main">
-        <form class="product-form" action="/product" method="POST">
+        <form class="product-form" action="/addproduct" method="POST">
             <div class="form-control">
                 <label title="Title"name="Title">Title</label>
                 <input type="text" name="Title" title="Title">

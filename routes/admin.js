@@ -9,13 +9,17 @@ const rootPath = require("../util/path");
 
 // Conttrollers
 const productController = require("../controllers/products");
-
+const adminController = require("../controllers/admin");
 
 const products = [];
 
-router.post("/product", productController.exePostProducts);
+router.get("/addproduct", productController.exeGetProducts);
 
-router.get("/product", productController.exeGetProducts);
+router.post("/addproduct", adminController.exePostProducts);
+
+router.get("/editProduct", adminController.exeGetToPutProduct);
+
+router.post("/editProduct", adminController.exePutProduct);
 
 //module.exports = router;
 exports.routes = router;
