@@ -1,4 +1,5 @@
 const productObj = require("../models/product");
+const cartObj = require("../models/cart");
 
 exports.exeGetProducts = (req, res, next) => {
   console.log("This is product page!!!");
@@ -52,7 +53,15 @@ exports.exeGetCart = (req, res, next) => {
 exports.exePostCart = (req, res, next) =>{
     console.log("Post request for Cart");
     const productID = req.body.productID;
+    productObj.findProductByID(productID, (product) => {
+        cartObj.addProduct(product);
+    });
     console.log(productID);
+    res.render("shop/cart", {
+        pageTitle : "Cart",
+        pageName : "cart",
+
+    })
 };
 
 exports.exeOrders = (req, res, next) => {
