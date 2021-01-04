@@ -41,12 +41,18 @@ exports.exeShowProductCatelog = (req, res, next) => {
   });
 };
 
-exports.exeCart = (req, res, next) => {
+exports.exeGetCart = (req, res, next) => {
   console.log("This is cart page");
   res.render("shop/cart", {
     pageTitle: "Cart",
     pageName: "cart"
   });
+};
+
+exports.exePostCart = (req, res, next) =>{
+    console.log("Post request for Cart");
+    const productID = req.body.productID;
+    console.log(productID);
 };
 
 exports.exeOrders = (req, res, next) => {
