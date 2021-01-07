@@ -1,1 +1,32 @@
-<%- include('../includes/boilerplate.ejs') %>
+<%- include('../includes/head.ejs') %>
+</head>
+<body class="body">
+    <header class="main-header">
+        <%- include('../includes/navigation.ejs') %>
+    </header>
+    <main>
+        <form class="product-form" action="/updateProduct" method="POST">
+            <div class="form-control">
+                <label title="Title"name="Title">Title</label>
+                <input type="text" name="Title" title="Title" value="<%= prod.title %>">
+            </div>
+            <div class="form-control">
+                <label title="Cost"name="Cost">Cost</label>
+                <input type="number" name="Cost" title="Cost" step="0.01" value="<%= prod.cost %>">
+            </div>
+            <div class="form-control">
+                <label title="Description"name="Description">Description</label>
+                <textarea type="textarea" name="Description" title="Description" rows="5"><%= prod.description %></textarea>
+            </div>
+            <div class="form-control">
+                <label title="ProductLink"name="ProductLink">Product Link</label>
+                <input type="url" name="ProductLink" title="ProductLink" value="<%= prod.url %>">
+                <hr>
+                    <img src="<%= prod.url %>" alt="<%= prod.title %>">
+                <hr>
+            </div>
+            <input type="hidden" name="productid" value="<%= prod.id %>">
+            <button class="button" type="submit">Update Product</button>
+        </form>
+    </main>
+<%- include('../includes/end.ejs') %>

@@ -31,6 +31,7 @@ exports.exeShowProductCatelog = (req, res, next) => {
 
   productObj.getAllProducts((products) => {
     console.log("Product list" + products);
+    console.log(products[products.length-1].title);
     res.render("shop/catelog", {
       pageTitle: "Catelog",
       prods: products,
@@ -46,6 +47,7 @@ exports.exeGetCart = (req, res, next) => {
   console.log("This is cart page");
   res.render("shop/cart", {
     pageTitle: "Cart",
+    prods: products,
     pageName: "cart"
   });
 };
