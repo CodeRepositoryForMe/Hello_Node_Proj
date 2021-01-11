@@ -1,1 +1,38 @@
-<%- include('../includes/boilerplate.ejs') %>
+<%- include('../includes/head.ejs') %>
+</head>
+<body class="body">
+    <header class="main-header">
+        <%- include('../includes/navigation.ejs') %>
+    </header>
+    <main>
+        <% if(cart && cart.products && cart.products.length > 0 ) { %>
+            <div class="grid">
+                <% for (let product of cart.products) { %>
+                    <% if(product.title ) { %>
+                    <article class="card product-item">
+                        <div class="card__header">
+                            <h1 class="product__title"><%= product.title %></h1>
+                        </div>
+                        <div class="card__image">
+                            <img src="<%= product.url %>" alt="<%= product.title %>">
+                        </div>
+                        <div class="card__content">
+                            <h2 class="product__price">Qty : <%= product.qty %></h2>
+                            <h2 class="product__price">₹ <%= product.cost %>/-</h2>
+                            <p class="product.description"><%= product.description %></p>
+                        </div>
+                        <div class="card__action">
+                            <a href="/deleteCartProduct/<%= product.id %>" class="btn">Delete</a>
+                        </div>
+                    </article>
+                    <% } %>
+                <% } %>
+                <div class="card__content">
+                    <h2 class="product__price">Cart Amount : ₹ <%= cart.totalPrice %></h2>
+                </div>
+            </div>
+            <% } else {%>
+                <h1>No product found</h1>
+        <% } %>    
+    </main>
+<%- include('../includes/end.ejs') %>

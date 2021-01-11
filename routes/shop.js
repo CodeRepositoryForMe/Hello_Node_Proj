@@ -17,4 +17,5 @@ router.use("/orders", productController.exeOrders);
 router.use("/checkout", productController.exeCheckout);
 router.use("/index", productController.exeIndex);
 router.use("/product/:productid", productController.exeGetProduct);
+router.use("/deleteCartProduct/:productid", productController.exeDeleteCartProduct)
 module.exports = router;

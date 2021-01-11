@@ -8,13 +8,16 @@ const cartDataPath = path.join(
 );
 
 module.exports = class Cart {
-  static addProduct(inProd) {
+  static addProduct(inProd, callback) {
     inProd.qty = 0;
     // fetch the previous cart data
-    fs.readFile(cartDataPath, (error, fileContent) => {
+    fs.readFile(cartDataPath,"utf8", (error, fileContent) => {
       let cart = { products: [], totalPrice: 0 };
       if (!error) {
-        cart = JSON.parse(fileContent);
+        console.log(fileContent);
+        if (fileContent) {
+          cart = JSON.parse(fileContent);
+        }
       } else {
         console.log(error);
       }
@@ -42,10 +45,51 @@ module.exports = class Cart {
       fs.writeFile(cartDataPath, JSON.stringify(cart), (error) => {
         console.log(error);
       });
-    }); 
+      callback();
+    });
   }
 
-  static deleteProductFromCart(){
-      
+  static deleteProductFromCart(prodID, callback) {
+    fs.readFile(cartDataPath, (error, fileContent) => {
+      if (error) {
+        return;
+      }
+      console.log("File read Complete");
+      let cart = JSON.parse(fileContent);
+      console.log(cart.totalPrice);
+      const updatedCart = { ...cart };
+      const product = updatedCart.products.find((prod) => prod.id === prodID);
+      if (!product) {
+        console.log("Invalid Product");
+        return;
+      }
+      console.log("QTY:" + product.qty);
+      const prodQty = product.qty;
+      const updatedTotalPrice =
+        updatedCart.totalPrice - product.cost * prodQty;
+        updatedCart.products = cart.products.filter(
+        (prod) => prod.id !== prodID
+      );
+      updatedCart.totalPrice = updatedTotalPrice;
+      console.log(updatedCart.products.length);
+      fs.writeFile(cartDataPath, JSON.stringify(updatedCart), (error) => {
+        console.log(error);
+      });
+      callback();
+    });
+  }
+
+  static getCart(callback) {
+    fs.readFile(cartDataPath,"utf8", (error, fileContent) => {
+      if (error) {
+        callback(null);
+      }
+      if (fileContent){
+        let cart = JSON.parse(fileContent);
+        callback(cart);
+      } else {
+        callback(null);
+      }
+    });
   }
 };

@@ -12,17 +12,17 @@ exports.exeGetProducts = (req, res, next) => {
   });
 };
 
-exports.exeGetProduct = (req, res, next) =>{
-    const productID = req.params.productid;
-    console.log(productID);
-    productObj.findProductByID(productID, product =>{
-        res.render("shop/product-details",{
-            pageTitle: "Product Details",
-            pageName: "pageDetails",
-            product : product
-        })
+exports.exeGetProduct = (req, res, next) => {
+  const productID = req.params.productid;
+  console.log(productID);
+  productObj.findProductByID(productID, (product) => {
+    res.render("shop/product-details", {
+      pageTitle: "Product Details",
+      pageName: "pageDetails",
+      product: product,
     });
-}
+  });
+};
 
 exports.exeShowProductCatelog = (req, res, next) => {
   console.log("This is catelog !!!");
@@ -31,7 +31,7 @@ exports.exeShowProductCatelog = (req, res, next) => {
 
   productObj.getAllProducts((products) => {
     console.log("Product list" + products);
-    console.log(products[products.length-1].title);
+    console.log(products[products.length - 1].title);
     res.render("shop/catelog", {
       pageTitle: "Catelog",
       prods: products,
@@ -45,47 +45,77 @@ exports.exeShowProductCatelog = (req, res, next) => {
 
 exports.exeGetCart = (req, res, next) => {
   console.log("This is cart page");
-  res.render("shop/cart", {
-    pageTitle: "Cart",
-    prods: products,
-    pageName: "cart"
+  cartObj.getCart((cart) => {
+    res.render("shop/cart", {
+      pageTitle: "Cart",
+      cart: cart,
+      pageName: "cart",
+    });
   });
 };
 
-exports.exePostCart = (req, res, next) =>{
-    console.log("Post request for Cart");
-    const productID = req.body.productID;
-    productObj.findProductByID(productID, (product) => {
-        cartObj.addProduct(product);
-    });
+exports.exePostCart = (req, res, next) => {
+  console.log("Post request for Cart");
+  const productID = req.body.productID;
+  productObj.findProductByID(productID, (product) => {
     console.log(productID);
-    res.render("shop/cart", {
-        pageTitle : "Cart",
-        pageName : "cart",
+    cartObj.addProduct(product, () => {
+      console.log("In Callback");
+      console.log(productID);
+      cartObj.getCart((cart) => {
+        res.render("shop/cart", {
+          pageTitle: "Cart",
+          pageName: "cart",
+          cart: cart,
+        });
+      });
+    });
+    // console.log(productID);
+    // cartObj.getCart((cart) => {
+    //   res.render("shop/cart", {
+    //     pageTitle: "Cart",
+    //     pageName: "cart",
+    //     cart: cart,
+    //   });
+    // });
+  });
+};
 
-    })
+exports.exeDeleteCartProduct = (req, res, next) => {
+  console.log("This is delete!!");
+  const productID = req.params.productid;
+  console.log(productID);
+  cartObj.deleteProductFromCart(productID, () => {
+    cartObj.getCart((cart) => {
+      res.render("shop/cart", {
+        pageTitle: "Cart",
+        pageName: "cart",
+        cart: cart,
+      });
+    });
+  });
 };
 
 exports.exeOrders = (req, res, next) => {
   console.log("This is order page");
   res.render("shop/orders", {
     pageTitle: "Orders",
-    pageName: "orders"
+    pageName: "orders",
   });
 };
 
-exports.exeCheckout = (req, res, next) =>{
-    console.log("This is check-out page");
-    res.render("shop/checkout",{
-        pageTitle: "Checkout",
-        pageName: "checkout"
-    });
-}
+exports.exeCheckout = (req, res, next) => {
+  console.log("This is check-out page");
+  res.render("shop/checkout", {
+    pageTitle: "Checkout",
+    pageName: "checkout",
+  });
+};
 
 exports.exeIndex = (req, res, next) => {
   console.log("This is index page");
   res.render("shop/index", {
     pageTitle: "Index",
-    pageName: "index"
+    pageName: "index",
   });
 };
