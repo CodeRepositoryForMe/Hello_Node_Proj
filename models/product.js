@@ -24,10 +24,7 @@ const getProductFromFile = (callback) => {
   });
 };
 module.exports = class product {
-  // constructor(productTitle){
-  //     this.title = productTitle;
-  // }
-
+  // Init product with given data
   constructor(id, productTitle, ProductCost, ProductDesc, ProductURL) {
     this.id = id;
     this.title = productTitle;
@@ -36,25 +33,17 @@ module.exports = class product {
     this.url = ProductURL;
   }
 
+  // Save this data
   save() {
-    console.log("This is save");
-    console.log(this.id);
-    console.log(this.title);
-    console.log(this.cost);
+    console.log("Save operation start !!!");
     if (this.id) {
       getProductFromFile((products) => {
         const productexistingProductIndex = products.findIndex(
           (p) => p.id === id
         );
-        console.log("Index");
-        console.log(productexistingProductIndex);
-        console.log(products[productexistingProductIndex].id);
         if (!productexistingProductIndex) {
           console.log("Product not found");
         } else {
-          console.log(
-            " i am in Else i.e. valid index for update " + this.id + " product"
-          );
           products[productexistingProductIndex] = this;
           fs.writeFile(filePath, JSON.stringify(products), (err) => {
             console.log(err);
@@ -70,37 +59,29 @@ module.exports = class product {
         });
       });
     }
+    console.log("Save operation completed !!!");
   }
 
+  // Delete selected product from product collection
   static delete(prodID) {
-    console.log("prodID");
-    console.log(prodID);
-    console.log("prodID");
+    console.log("Delete operation start !!");
     getProductFromFile((products) => {
-      console.log(products.length);
       //const productIndex = products.findIndex((p) => { p.id === prodID });
-      const updatedProducts = products.filter(prod => prod.id !== prodID);
+      const updatedProducts = products.filter((prod) => prod.id !== prodID);
       console.log(updatedProducts.length);
       fs.writeFile(filePath, JSON.stringify(updatedProducts), (error) => {
         console.log(error);
       });
-    //   console.log(productIndex);
-    //   console.log(products[productIndex]);
-    //   console.log(products.length);
-    //   delete products[productIndex];
-    //   console.log(products.length);
-    //   console.log(products[productIndex]);
-
-    //   fs.writeFile(filePath, JSON.stringify(products), (error) => {
-    //     console.log(error);
-    //   });
     });
+    console.log("Delete operation completed !!");
   }
 
+  // Get all products
   static getAllProducts(callback) {
     getProductFromFile(callback);
   }
 
+  // Find product by ID
   static findProductByID(id, callback) {
     getProductFromFile((products) => {
       const product = products.find((p) => p.id === id);

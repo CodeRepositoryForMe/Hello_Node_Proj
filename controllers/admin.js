@@ -1,15 +1,8 @@
 const productObj = require("../models/product");
 
+// Add product to Catelog
 exports.exePostProducts = (req, res, next) => {
-  console.log("Product Added !!!");
-  console.log(req.body);
-  //res.redirect("/catelog");
-  // products.push({
-  //   title: req.body.Title,
-  //   cost: req.body.Cost,
-  //   description: req.body.Description,
-  //   url: req.body.ProductLink,
-  // });
+  console.log("Add product to Catelog !!");
   const product = new productObj(
     (id = null),
     (title = req.body.Title),
@@ -19,18 +12,14 @@ exports.exePostProducts = (req, res, next) => {
   );
 
   product.save();
-
-  console.log("From Add Product " + product);
-  //res.sendFile(path.join(rootPath,'views','catelog.html'));  // This is HTML file
-  //https://elcopcbonline.com/photos/product/4/176/4.jpg
+  console.log("Product added to Catelog successfully !!");
   res.redirect("/catelog");
 };
 
+// Get list of products to select product for update
 exports.exeGetToPutProduct = (req, res, next) => {
-  console.log("Get product To Put");
-
+  console.log("Update existing product !!");
   productObj.getAllProducts((products) => {
-    console.log("Product list" + products);
     res.render("admin/products", {
       pageTitle: "Edit Product",
       prods: products,
@@ -40,13 +29,13 @@ exports.exeGetToPutProduct = (req, res, next) => {
   });
 };
 
+// Get selected product details
 exports.exeGetToUpdateProduct = (req, res, next) => {
-  console.log("Update this product!!");
+  console.log("Show selected product details!!");
   console.log(req.params.productid);
   const productID = req.params.productid;
-  console.log(productID);
   productObj.findProductByID(productID, (product) => {
-    console.log(product);
+    //console.log(product);
     res.render("admin/edit-product", {
       pageTitle: "Update Product",
       prod: product,
@@ -55,9 +44,12 @@ exports.exeGetToUpdateProduct = (req, res, next) => {
   });
 };
 
+// Update selected product in product catelog
 exports.exePutProduct = (req, res, next) => {
-  console.log("Put this product");
+  console.log("Update this product");
   console.log(req.body.productid);
+
+  // Init product object with productID
   const product = new productObj(
     (id = req.body.productid),
     (title = req.body.Title),
@@ -68,22 +60,14 @@ exports.exePutProduct = (req, res, next) => {
 
   product.save();
 
-  res.redirect('/editProduct');
-//   const products = productObj.getAllProducts((products) => {
-//     res.render("admin/products", {
-//       pageTitle: "Edit Product",
-//       prods: products,
-//       pageName: "editProduct",
-//       catelog: true,
-//     });
-//   });
+  res.redirect("/editProduct");
 };
 
-exports.exeDeleteProduct = (req, res, next) =>{
-    console.log("This is delete ");
-    console.log(req.body.productid);
-    const productID = req.body.productid;
-    console.log(productID);
-    productObj.delete(productID);
-    res.redirect('/editProduct');
-}; 
+// Delete selected product from product catelog
+exports.exeDeleteProduct = (req, res, next) => {
+  console.log("Delete this product");
+  console.log(req.body.productid);
+  const productID = req.body.productid;
+  productObj.delete(productID);
+  res.redirect("/editProduct");
+};

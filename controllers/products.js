@@ -1,10 +1,9 @@
 const productObj = require("../models/product");
 const cartObj = require("../models/cart");
 
+// Get all products
 exports.exeGetProducts = (req, res, next) => {
   console.log("This is product page!!!");
-  //res.send('<form method="POST", action="./product"><input type="Text" name="Title"><button type="Submit">Add product</button></form>');
-  //res.sendFile(path.join(rootPath,'views','addproduct.html')); // This is HTML file
   res.render("admin/add-product", {
     pageTitle: "Add Product",
     pageName: "product",
@@ -12,6 +11,8 @@ exports.exeGetProducts = (req, res, next) => {
   });
 };
 
+
+// Get product by ID
 exports.exeGetProduct = (req, res, next) => {
   const productID = req.params.productid;
   console.log(productID);
@@ -24,14 +25,12 @@ exports.exeGetProduct = (req, res, next) => {
   });
 };
 
+// Show all product in catelog
 exports.exeShowProductCatelog = (req, res, next) => {
-  console.log("This is catelog !!!");
+  console.log("Catelog page here !!!");
   //res.sendFile(path.join(rootPath,'views','catelog.html'));
   //const products = adminRoute.products;
-
   productObj.getAllProducts((products) => {
-    console.log("Product list" + products);
-    console.log(products[products.length - 1].title);
     res.render("shop/catelog", {
       pageTitle: "Catelog",
       prods: products,
@@ -43,8 +42,9 @@ exports.exeShowProductCatelog = (req, res, next) => {
   });
 };
 
+// Get all products from catr file
 exports.exeGetCart = (req, res, next) => {
-  console.log("This is cart page");
+  console.log("Cart page here !!!");
   cartObj.getCart((cart) => {
     res.render("shop/cart", {
       pageTitle: "Cart",
