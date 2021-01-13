@@ -11,7 +11,6 @@ exports.exeGetProducts = (req, res, next) => {
   });
 };
 
-
 // Get product by ID
 exports.exeGetProduct = (req, res, next) => {
   const productID = req.params.productid;
@@ -54,6 +53,7 @@ exports.exeGetCart = (req, res, next) => {
   });
 };
 
+// Add product to cart
 exports.exePostCart = (req, res, next) => {
   console.log("Post request for Cart");
   const productID = req.body.productID;
@@ -70,19 +70,12 @@ exports.exePostCart = (req, res, next) => {
         });
       });
     });
-    // console.log(productID);
-    // cartObj.getCart((cart) => {
-    //   res.render("shop/cart", {
-    //     pageTitle: "Cart",
-    //     pageName: "cart",
-    //     cart: cart,
-    //   });
-    // });
   });
 };
 
+// Delete selected product
 exports.exeDeleteCartProduct = (req, res, next) => {
-  console.log("This is delete!!");
+  console.log("Delete this product !!");
   const productID = req.params.productid;
   console.log(productID);
   cartObj.deleteProductFromCart(productID, () => {
@@ -114,8 +107,17 @@ exports.exeCheckout = (req, res, next) => {
 
 exports.exeIndex = (req, res, next) => {
   console.log("This is index page");
-  res.render("shop/index", {
-    pageTitle: "Index",
-    pageName: "index",
-  });
+  productObj
+    .fetchDataFromDB()
+    .then(([rows, fieldData]) => {
+      console.log(rows);
+      res.render("shop/index", {
+        pageTitle: "Index",
+        pageName: "index",
+        prods : rows
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
+const db = require("../util/database");
+
 const filePath = path.join(
   path.dirname(require.main.filename),
   "data",
@@ -23,6 +25,7 @@ const getProductFromFile = (callback) => {
     callback(products);
   });
 };
+
 module.exports = class product {
   // Init product with given data
   constructor(id, productTitle, ProductCost, ProductDesc, ProductURL) {
@@ -88,4 +91,17 @@ module.exports = class product {
       callback(product);
     });
   }
+
+  //======= Code for DB
+
+  saveInDB() {}
+
+  static deleteProductFromDB(id) {}
+
+  static fetchDataFromDB() {
+    console.log("DB function here");
+    return db.execute("SELECT * FROM product");
+  }
+
+  static findDataByIDFromDB(id, cb) {}
 };
