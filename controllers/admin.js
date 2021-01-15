@@ -132,24 +132,21 @@ exports.exePutProduct = (req, res, next) => {
     .findByPk(req.body.productid)
     .then((result) => {
       if (result) {
-        result
-          .update({
-            id: req.body.productid,
-            title: req.body.Title,
-            cost: req.body.Cost,
-            description: req.body.Description,
-            url: req.body.ProductLink,
-          })
-          .then((result) => {
-            //console.log("***"+result);
-            res.redirect("/editProduct");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        return result.update({
+          id: req.body.productid,
+          title: req.body.Title,
+          cost: req.body.Cost,
+          description: req.body.Description,
+          url: req.body.ProductLink,
+        });
       } else {
         console.log("Invalid product");
       }
+    })
+    .then((result) => {
+      //console.log("***"+result);
+      console.log("Record updated");
+      res.redirect("/editProduct");
     })
     .catch((err) => {
       console.log(err);
@@ -171,20 +168,15 @@ exports.exeDeleteProduct = (req, res, next) => {
     .findByPk(productID)
     .then((result) => {
       if (result) {
-        result
-          .destroy()
-          .then((result) => {
-            //console.log(result);
-            console.log("Record Deleted");
-            res.redirect("/editProduct");
-          })
-          .catch((err) => {
-            console.log("Failed to delete record");
-            console.log(err);
-          });
+        return result.destroy();
       } else {
         console.log("Record not found");
       }
+    })
+    .then((result) => {
+      //console.log(result);
+      console.log("Record Deleted");
+      res.redirect("/editProduct");
     })
     .catch((err) => {
       console.log(err);
