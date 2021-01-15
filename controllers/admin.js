@@ -12,8 +12,18 @@ exports.exePostProducts = (req, res, next) => {
   );
 
   product.save();
-  console.log("Product added to Catelog successfully !!");
-  res.redirect("/catelog");
+
+  product
+    .saveInDB()
+    .then(() => {
+      console.log("Added !!!!");
+      console.log("Product added to Catelog successfully !!");
+      res.redirect("/catelog");
+    })
+    .catch((err) => {
+        console.log("Error here");
+      console.log(err);
+    });
 };
 
 // Get list of products to select product for update

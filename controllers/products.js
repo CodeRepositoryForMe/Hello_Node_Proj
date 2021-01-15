@@ -15,13 +15,26 @@ exports.exeGetProducts = (req, res, next) => {
 exports.exeGetProduct = (req, res, next) => {
   const productID = req.params.productid;
   console.log(productID);
-  productObj.findProductByID(productID, (product) => {
-    res.render("shop/product-details", {
-      pageTitle: "Product Details",
-      pageName: "pageDetails",
-      product: product,
+  //   productObj.findProductByID(productID, (product) => {
+  //     res.render("shop/product-details", {
+  //       pageTitle: "Product Details",
+  //       pageName: "pageDetails",
+  //       product: product,
+  //     });
+  console.log("aloy");
+  productObj
+    .findDataByIDFromDB(productID)
+    .then((row) => {
+      console.log(row[0][0]);
+      res.render("shop/product-details", {
+        pageTitle: "Product Details",
+        pageName: "pageDetails",
+        product: row[0][0],
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 // Show all product in catelog
@@ -29,16 +42,33 @@ exports.exeShowProductCatelog = (req, res, next) => {
   console.log("Catelog page here !!!");
   //res.sendFile(path.join(rootPath,'views','catelog.html'));
   //const products = adminRoute.products;
-  productObj.getAllProducts((products) => {
-    res.render("shop/catelog", {
-      pageTitle: "Catelog",
-      prods: products,
-      doctTitle: "Shopping Catalog",
-      pageName: "catelog",
-      hasProduct: products.length > 0,
-      catelog: true,
+
+  //   productObj.getAllProducts((products) => {
+  //     res.render("shop/catelog", {
+  //       pageTitle: "Catelog",
+  //       prods: products,
+  //       doctTitle: "Shopping Catalog",
+  //       pageName: "catelog",
+  //       hasProduct: products.length > 0,
+  //       catelog: true,
+  //     });
+  //   });
+
+  productObj
+    .fetchDataFromDB()
+    .then(([rows, files]) => {
+      res.render("shop/catelog", {
+        pageTitle: "Catelog",
+        prods: rows,
+        doctTitle: "Shopping Catalog",
+        pageName: "catelog",
+        hasProduct: rows.length > 0,
+        catelog: true,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 // Get all products from catr file
@@ -114,7 +144,7 @@ exports.exeIndex = (req, res, next) => {
       res.render("shop/index", {
         pageTitle: "Index",
         pageName: "index",
-        prods : rows
+        prods: rows,
       });
     })
     .catch((err) => {

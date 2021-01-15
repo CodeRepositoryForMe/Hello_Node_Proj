@@ -94,14 +94,24 @@ module.exports = class product {
 
   //======= Code for DB
 
-  saveInDB() {}
+  saveInDB() {
+    console.log("DB save operation start ");
+    this.id = uuidv4();
+    return db.execute(
+      "INSERT INTO product (id, title, cost, description, url) VALUES (?, ?, ?, ?, ?)",
+      [this.id, this.title, this.cost, this.description, this.url]
+    );
+  }
 
   static deleteProductFromDB(id) {}
 
   static fetchDataFromDB() {
-    console.log("DB function here");
+    console.log("DB function for fetch all data here");
     return db.execute("SELECT * FROM product");
   }
 
-  static findDataByIDFromDB(id, cb) {}
+  static findDataByIDFromDB(id) {
+    console.log("DB function for fetch data from ID");
+    return db.execute("SELECT * FROM product WHERE id = ?", [id]);
+  }
 };
