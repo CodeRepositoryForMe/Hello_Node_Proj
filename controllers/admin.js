@@ -1,29 +1,51 @@
 const productObj = require("../models/product");
+const { v4: uuidv4 } = require("uuid");
 
 // Add product to Catelog
 exports.exePostProducts = (req, res, next) => {
   console.log("Add product to Catelog !!");
-  const product = new productObj(
-    (id = null),
-    (title = req.body.Title),
-    (cost = req.body.Cost),
-    (description = req.body.Description),
-    (url = req.body.ProductLink)
-  );
 
-  product.save();
+  //   const product = new productObj(
+  //     (id = null),
+  //     (title = req.body.Title),
+  //     (cost = req.body.Cost),
+  //     (description = req.body.Description),
+  //     (url = req.body.ProductLink)
+  //   );
 
-  product
-    .saveInDB()
-    .then(() => {
-      console.log("Added !!!!");
-      console.log("Product added to Catelog successfully !!");
-      res.redirect("/catelog");
-    })
-    .catch((err) => {
-        console.log("Error here");
-      console.log(err);
-    });
+  //   product.save();
+
+  //   product
+  //     .saveInDB()
+  //     .then(() => {
+  //       console.log("Added !!!!");
+  //       console.log("Product added to Catelog successfully !!");
+  //       res.redirect("/catelog");
+  //     })
+  //     .catch((err) => {
+  //         console.log("Error here");
+  //       console.log(err);
+  //     });
+
+  //// Code for Sequelize
+  // productObj.create({
+  //     id = uuidv4(),
+  //         title = req.body.Title,
+  //         cost = req.body.Cost,
+  //         description = req.body.Description,
+  // url = req.body.ProductLink
+  // }).then((result) => {}).catch((err)=>{});
+  productObj.create({
+      id : uuidv4(),
+      title : req.body.Title,
+      cost : req.body.Cost,
+      description : req.body.Description,
+      url : req.body.ProductLink 
+  }).then((result) => {
+    console.log(result);
+  }).catch((err) => {
+    console.log(err);
+  });
 };
 
 // Get list of products to select product for update
