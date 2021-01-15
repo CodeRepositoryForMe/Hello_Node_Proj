@@ -1,0 +1,9 @@
+
+About: sequelize - 
+    Note for: findAll() => raw = true 
+    Description: It returns only datavalues from Sequelize ORM 
+    CODE: productObj
+        .findAll({
+            raw: true,
+        })
+=   =   =   =   =   =   =   =   =   =   

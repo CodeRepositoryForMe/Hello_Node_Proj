@@ -23,13 +23,19 @@ exports.exeGetProduct = (req, res, next) => {
   //     });
   console.log("aloy");
   productObj
-    .findDataByIDFromDB(productID)
+    //.findDataByIDFromDB(productID)        // PURE - DB Method
+    .findOne({
+      id: productID,
+      raw: true,
+    })
     .then((row) => {
-      console.log(row[0][0]);
+      console.log(row);
+      //console.log(row[0][0]); // PURE DB result set
       res.render("shop/product-details", {
         pageTitle: "Product Details",
         pageName: "pageDetails",
-        product: row[0][0],
+        //product: row[0][0], // PURE DB result set
+        product: row
       });
     })
     .catch((err) => {
@@ -54,15 +60,36 @@ exports.exeShowProductCatelog = (req, res, next) => {
   //     });
   //   });
 
+  //// This pure DB code to fetch all products
+  //   productObj
+  //     .fetchDataFromDB()
+  //     .then(([rows, files]) => {
+  //       res.render("shop/catelog", {
+  //         pageTitle: "Catelog",
+  //         prods: rows,
+  //         doctTitle: "Shopping Catalog",
+  //         pageName: "catelog",
+  //         hasProduct: rows.length > 0,
+  //         catelog: true,
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+
   productObj
-    .fetchDataFromDB()
-    .then(([rows, files]) => {
+    .findAll({
+      raw: true,
+    })
+    .then((products) => {
+      console.log("Done");
+      console.log(products);
       res.render("shop/catelog", {
         pageTitle: "Catelog",
-        prods: rows,
+        prods: products,
         doctTitle: "Shopping Catalog",
         pageName: "catelog",
-        hasProduct: rows.length > 0,
+        hasProduct: products.length > 0,
         catelog: true,
       });
     })

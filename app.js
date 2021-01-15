@@ -52,7 +52,7 @@ const server = http.createServer(app);
 sequelizeObj
   .sync()
   .then((result) => {
-    console.log(result);
+    //console.log(result);
     server.listen(3000, function () {
       console.log("Server started !!!");
     });
