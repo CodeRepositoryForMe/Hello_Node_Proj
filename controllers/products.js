@@ -15,17 +15,19 @@ exports.exeGetProducts = (req, res, next) => {
 exports.exeGetProduct = (req, res, next) => {
   const productID = req.params.productid;
   console.log(productID);
+  //// Code - Fetch data from file
   //   productObj.findProductByID(productID, (product) => {
   //     res.render("shop/product-details", {
   //       pageTitle: "Product Details",
   //       pageName: "pageDetails",
   //       product: product,
   //     });
-  console.log("aloy");
+
   productObj
+    //// Code to fetch data from DB
     //.findDataByIDFromDB(productID)        // PURE - DB Method
     .findAll({
-      where: { id: productID},
+      where: { id: productID },
       raw: true,
     })
     //.findByPk(productID)
@@ -36,7 +38,7 @@ exports.exeGetProduct = (req, res, next) => {
         pageTitle: "Product Details",
         pageName: "pageDetails",
         //product: row[0][0], // PURE DB result set
-        product: row[0]
+        product: row[0],
       });
     })
     .catch((err) => {
@@ -50,6 +52,7 @@ exports.exeShowProductCatelog = (req, res, next) => {
   //res.sendFile(path.join(rootPath,'views','catelog.html'));
   //const products = adminRoute.products;
 
+  //// Code to fetch data from file
   //   productObj.getAllProducts((products) => {
   //     res.render("shop/catelog", {
   //       pageTitle: "Catelog",
@@ -61,7 +64,7 @@ exports.exeShowProductCatelog = (req, res, next) => {
   //     });
   //   });
 
-  //// This pure DB code to fetch all products
+  //// Pure DB code to fetch all products
   //   productObj
   //     .fetchDataFromDB()
   //     .then(([rows, files]) => {
@@ -78,6 +81,7 @@ exports.exeShowProductCatelog = (req, res, next) => {
   //       console.log(err);
   //     });
 
+  //// Sequelize - Code to fetch all product for catelog
   productObj
     .findAll({
       raw: true,
