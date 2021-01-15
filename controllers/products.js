@@ -24,11 +24,11 @@ exports.exeGetProduct = (req, res, next) => {
   console.log("aloy");
   productObj
     //.findDataByIDFromDB(productID)        // PURE - DB Method
-    // .findById({
-    //   id: productID,
-    //   raw: true,
-    // })
-    .findByPk(productID)
+    .findAll({
+      where: { id: productID},
+      raw: true,
+    })
+    //.findByPk(productID)
     .then((row) => {
       console.log(row);
       //console.log(row[0][0]); // PURE DB result set
@@ -36,7 +36,7 @@ exports.exeGetProduct = (req, res, next) => {
         pageTitle: "Product Details",
         pageName: "pageDetails",
         //product: row[0][0], // PURE DB result set
-        product: row
+        product: row[0]
       });
     })
     .catch((err) => {
