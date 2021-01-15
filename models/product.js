@@ -115,3 +115,37 @@ module.exports = class product {
     return db.execute("SELECT * FROM product WHERE id = ?", [id]);
   }
 };
+
+//// Initialize module with sequelize
+
+const sequelize = require('sequelize');
+
+const sequelizeObj = require('../util/database');
+const { Sequelize } = require("sequelize");
+
+const Product = sequelizeObj.define('product',{
+    id:{
+        type: sequelize.STRING,
+        allowNull : false,
+        primaryKey: true
+        ////autoIncrement: true  // For auto increment PK
+    },
+    title:{
+        type: sequelize.STRING,
+        allowNull : false
+    },
+    cost : {
+        type: sequelize.DECIMAL,
+        allowNull: false
+    },
+    description: {
+        type: sequelize.STRING,
+        allowNull : false
+    },
+    url : {
+        type: sequelize.STRING,
+        allowNull : false
+    }
+});
+
+module.exports = Product;
