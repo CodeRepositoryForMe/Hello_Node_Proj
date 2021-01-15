@@ -24,10 +24,11 @@ exports.exeGetProduct = (req, res, next) => {
   console.log("aloy");
   productObj
     //.findDataByIDFromDB(productID)        // PURE - DB Method
-    .findOne({
-      id: productID,
-      raw: true,
-    })
+    // .findById({
+    //   id: productID,
+    //   raw: true,
+    // })
+    .findByPk(productID)
     .then((row) => {
       console.log(row);
       //console.log(row[0][0]); // PURE DB result set
