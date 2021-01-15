@@ -11,7 +11,8 @@ const userRouter = require("./routes/user");
 const defaultRoute = require("./routes/default");
 
 // DB
-const db = require("./util/database");
+//const db = require("./util/database");
+const sequelizeObj = require("./util/database");
 
 // Controllers
 const errorController = require("./controllers/Error");
@@ -29,7 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //   .then((result) => {
 //     console.log(result);
 //   })
-//   .catch((err) => { 
+//   .catch((err) => {
 //     console.log(err);
 //   });
 
@@ -48,6 +49,14 @@ app.use(errorController.errorPageNotFound);
 
 const server = http.createServer(app);
 
-server.listen(3000, function () {
-  console.log("Server started !!!");
-});
+sequelizeObj
+  .sync()
+  .then((result) => {
+    console.log(result);
+    server.listen(3000, function () {
+      console.log("Server started !!!");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });

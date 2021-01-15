@@ -123,7 +123,7 @@ const sequelize = require('sequelize');
 const sequelizeObj = require('../util/database');
 const { Sequelize } = require("sequelize");
 
-const Product = sequelizeObj.define('product',{
+const Product = sequelizeObj.define('productTbl',{
     id:{
         type: sequelize.STRING,
         allowNull : false,
