@@ -1,3 +1,6 @@
+/*
+//// Code to deal with file
+
 const fs = require("fs");
 const path = require("path");
 
@@ -107,3 +110,18 @@ module.exports = class Cart {
     });
   }
 };
+*/
+
+const sequelize = require("sequelize");
+
+const sequelizeObj = require("../util/database");
+
+const Cart = sequelizeObj.define("cart", {
+  id: {
+    type: sequelize.STRING,
+    allowNull: false,
+    primaryKey: true,
+  },
+});
+
+module.exports = Cart;
