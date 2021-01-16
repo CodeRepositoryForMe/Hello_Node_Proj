@@ -38,6 +38,7 @@ exports.exePostProducts = (req, res, next) => {
       cost: req.body.Cost,
       description: req.body.Description,
       url: req.body.ProductLink,
+      UserId: req.loggedUser.id
     })
     .then((result) => {
       //console.log(result);

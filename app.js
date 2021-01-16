@@ -39,6 +39,21 @@ app.use(express.static(path.join(__dirname, "public")));
 //     console.log(err);
 //   });
 
+// Add middleware to get user
+app.use((req, res, next) => {
+  User.findAll({ limit: 1, raw: true })
+    .then((user) => {
+      //console.log(user);
+      req.loggedUser = user[0];
+      console.log("Logged User =>" + req.loggedUser.name);
+      next();
+    })
+    .catch((err) => {
+      console.log("Logged User not found");
+      console.log(err);
+    });
+});
+
 app.use("/", (req, res, next) => {
   console.log("This always Executes !!!");
   console.log(req.body);
@@ -58,12 +73,13 @@ const server = http.createServer(app);
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
+// This code executes at first time only
 sequelizeObj
   //.sync({force : true})
   .sync()
   .then((result) => {
     //console.log(result);
-    return User.findAll({ limit: 1 , raw: true});
+    return User.findAll({ limit: 1, raw: true });
   })
   .then((user) => {
     console.log("user ------ >");
