@@ -1,5 +1,6 @@
 const http = require("http");
 const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -13,6 +14,10 @@ const defaultRoute = require("./routes/default");
 // DB
 //const db = require("./util/database");
 const sequelizeObj = require("./util/database");
+
+// Add Modules
+const Product = require("./models/product");
+const User = require("./models/user");
 
 // Controllers
 const errorController = require("./controllers/Error");
@@ -49,10 +54,31 @@ app.use(errorController.errorPageNotFound);
 
 const server = http.createServer(app);
 
+// Add data relations
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
 sequelizeObj
+  //.sync({force : true})
   .sync()
   .then((result) => {
     //console.log(result);
+    return User.findAll({ limit: 1 , raw: true});
+  })
+  .then((user) => {
+    console.log("user ------ >");
+    console.log(user);
+    if (!user || user.length == 0) {
+      return User.create({
+        id: uuidv4(),
+        name: "Test",
+        email: "Test@gmail.com",
+      });
+    }
+    return user;
+  })
+  .then((user) => {
+    console.log(user);
     server.listen(3000, function () {
       console.log("Server started !!!");
     });
