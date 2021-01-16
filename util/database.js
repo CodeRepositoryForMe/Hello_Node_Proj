@@ -2,6 +2,8 @@
 const dotenv = require("dotenv");
 const sequelize = require("sequelize");
 
+//const { sequelize } = require("sequelize");
+
 dotenv.config();
 
 //// Traditional MySQL connection
@@ -22,8 +24,7 @@ const sequelizeObj = new sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PWD,
-  { dialect: process.env.DB_SERVER, 
-    host: process.env.DB_HOST }
+  { dialect: process.env.DB_SERVER, host: process.env.DB_HOST }
 );
 
 module.exports = sequelizeObj;

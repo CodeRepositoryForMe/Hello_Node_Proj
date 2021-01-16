@@ -38,7 +38,7 @@ exports.exePostProducts = (req, res, next) => {
       cost: req.body.Cost,
       description: req.body.Description,
       url: req.body.ProductLink,
-      UserId: req.loggedUser.id
+      UserId: req.loggedUser.id,
     })
     .then((result) => {
       //console.log(result);
@@ -47,6 +47,26 @@ exports.exePostProducts = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+
+  //// Advantage of Association
+  //   console.log(req.loggedUser);
+  //   req.loggedUser
+  //     .create({
+  //       product: {
+  //         id: uuidv4(),
+  //         title: req.body.Title,
+  //         cost: req.body.Cost,
+  //         description: req.body.Description,
+  //         url: req.body.ProductLink,
+  //       },
+  //     })
+  //     .then((result) => {
+  //       //console.log(result);
+  //       res.redirect("/catelog");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
 };
 
 // Get list of products to select product for update
