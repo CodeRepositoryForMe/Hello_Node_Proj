@@ -58,16 +58,28 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   console.log(req.loggedUser.id);
-  return Cart.findOne({ Where: { UserId: req.loggedUser.id } })
-    .then((cart) => {
-      console.log("---->");
-      console.log(cart.id);
-      req.loggedUserCart = cart[0];
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  console.log("Cart -- > ");
+//   return req.loggedUser
+//     .getCart()
+//     .then((cart) => {
+//       console.log("Cart--->");
+//       console.log(cart.id);
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+
+    return Cart.findOne({ Where: { UserId: req.loggedUser.id } })
+      .then((cart) => {
+        console.log("---->");
+        console.log(cart.id);
+        req.loggedUserCart = cart;
+        next();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 });
 
 app.use("/", (req, res, next) => {

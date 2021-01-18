@@ -106,13 +106,22 @@ exports.exeShowProductCatelog = (req, res, next) => {
 // Get all products from catr file
 exports.exeGetCart = (req, res, next) => {
   console.log("Cart page here !!!");
-  cartObj.getCart((cart) => {
+//   cartObj.getCart((cart) => {
+//     res.render("shop/cart", {
+//       pageTitle: "Cart",
+//       cart: cart,
+//       pageName: "cart",
+//     });
+//   });
+    console.log("Existing Cart");
+    console.log(req.loggedUserCart);
+    console.log(req.loggedUserCart.UserId);
+    console.log(req.loggedUserCart.id);
     res.render("shop/cart", {
       pageTitle: "Cart",
-      cart: cart,
+      cart: req.loggedUserCart,
       pageName: "cart",
     });
-  });
 };
 
 // Add product to cart
