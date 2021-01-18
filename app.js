@@ -56,6 +56,20 @@ app.use((req, res, next) => {
     });
 });
 
+app.use((req, res, next) => {
+  console.log(req.loggedUser.id);
+  return Cart.findOne({ Where: { UserId: req.loggedUser.id } })
+    .then((cart) => {
+      console.log("---->");
+      console.log(cart.id);
+      req.loggedUserCart = cart[0];
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 app.use("/", (req, res, next) => {
   console.log("This always Executes !!!");
   console.log(req.body);
@@ -80,26 +94,49 @@ Product.belongsToMany(Cart, { through: CartItem });
 
 // This code executes at first time only
 sequelizeObj
-  .sync({force : true})
-//   .sync()
-  .then((result) => {
+  //.sync({ force: true })
+  .sync()
+  .then(() => {
     //console.log(result);
-    return User.findAll({ limit: 1, raw: true });
-  })
-  .then((user) => {
-    console.log("user ------ >");
-    console.log(user);
-    if (!user || user.length == 0) {
-      return User.create({
+    //return User.findAll({ raw: true });
+    return User.findOrCreate({
+      where: {
+        name: "Test",
+      },
+      defaults: {
         id: uuidv4(),
         name: "Test",
         email: "Test@gmail.com",
-      });
-    }
-    return user;
+        Cart: {
+          id: uuidv4(),
+        },
+      },
+    });
   })
+  //   .then((user) => {
+  //     console.log("Check for User Exist");
+  //     console.log(user[0]);
+  //     if (!user[0]) {
+  //       return User.create({
+  //         id: uuidv4(),
+  //         name: "Test",
+  //         email: "Test@gmail.com",
+  //       });
+  //     } else {
+  //       return user[0];
+  //     }
+  //   })
   .then((user) => {
-    console.log(user);
+    console.log("Check for Cart Exist from DB");
+    console.log(user[0]);
+    console.log(user[0].id);
+    return Cart.findOrCreate({
+      where: { UserId: user[0].id },
+      defaults: { id: uuidv4(), UserID: user[0].id },
+    });
+  })
+  .then((cart) => {
+    console.log(cart);
     server.listen(3000, function () {
       console.log("Server started !!!");
     });
