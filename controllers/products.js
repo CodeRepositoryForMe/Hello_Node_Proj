@@ -223,7 +223,9 @@ exports.exePostCart = (req, res, next) => {
           .then((cart) => {
             console.log("cart 1");
             console.log(cart);
+            console.log("cart [0] ------");
             console.log(cart[0]);
+            console.log("cart[0].productTbls =======");
             console.log(cart[0].productTbls);
             console.log("cart.productTbls 1");
             //console.log(cart.productTbls);
