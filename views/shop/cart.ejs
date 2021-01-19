@@ -5,9 +5,9 @@
         <%- include('../includes/navigation.ejs') %>
     </header>
     <main>
-        <% if(cart && cart.products && cart.products.length > 0 ) { %>
+        <% if(cart && cart.productTbls) { %>
             <div class="grid">
-                <% for (let product of cart.products) { %>
+                <% for (let product of cart.productTbls) { %>
                     <% if(product.title ) { %>
                     <article class="card product-item">
                         <div class="card__header">

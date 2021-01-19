@@ -15,6 +15,9 @@ const defaultRoute = require("./routes/default");
 //const db = require("./util/database");
 const sequelizeObj = require("./util/database");
 
+// Helper
+const Helper = require('./util/helper');
+
 // Add Modules
 const Product = require("./models/product");
 const User = require("./models/user");
@@ -60,7 +63,7 @@ app.use((req, res, next) => {
   console.log(req.loggedUser.id);
   console.log("Cart -- > ");
 //   return req.loggedUser
-//     .getCart()
+//     .getCart()           // This should work  Issue4ME-2
 //     .then((cart) => {
 //       console.log("Cart--->");
 //       console.log(cart.id);
@@ -142,6 +145,7 @@ sequelizeObj
     console.log("Check for Cart Exist from DB");
     console.log(user[0]);
     console.log(user[0].id);
+    //// User.createCart        //// This should work  Issue4ME-1
     return Cart.findOrCreate({
       where: { UserId: user[0].id },
       defaults: { id: uuidv4(), UserID: user[0].id },

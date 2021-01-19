@@ -1,5 +1,11 @@
 const productObj = require("../models/product");
 const cartObj = require("../models/cart");
+const cartItemObj = require("../models/cartItem");
+const Product = require("../models/product");
+const Cart = require("../models/cart");
+const User = require("../models/user");
+const { v4: uuidv4 } = require("uuid");
+const Helper = require("../util/helper");
 
 // Get all products
 exports.exeGetProducts = (req, res, next) => {
@@ -106,21 +112,28 @@ exports.exeShowProductCatelog = (req, res, next) => {
 // Get all products from catr file
 exports.exeGetCart = (req, res, next) => {
   console.log("Cart page here !!!");
-//   cartObj.getCart((cart) => {
-//     res.render("shop/cart", {
-//       pageTitle: "Cart",
-//       cart: cart,
-//       pageName: "cart",
-//     });
-//   });
-    console.log("Existing Cart");
-    console.log(req.loggedUserCart);
-    console.log(req.loggedUserCart.UserId);
-    console.log(req.loggedUserCart.id);
-    res.render("shop/cart", {
-      pageTitle: "Cart",
-      cart: req.loggedUserCart,
-      pageName: "cart",
+  //// Get all cart products through "Include"
+  return Cart.findOne({
+    include: [
+      {
+        model: Product,
+        through: {
+          where: { cartId: req.loggedUserCart.id },
+        },
+      },
+    ],
+  })
+    .then((cart) => {
+      console.log(cart);
+      console.log(cart.id);
+      res.render("shop/cart", {
+        pageTitle: "Cart",
+        cart: cart.productTbls,
+        pageName: "cart",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
@@ -128,20 +141,211 @@ exports.exeGetCart = (req, res, next) => {
 exports.exePostCart = (req, res, next) => {
   console.log("Post request for Cart");
   const productID = req.body.productID;
-  productObj.findProductByID(productID, (product) => {
-    console.log(productID);
-    cartObj.addProduct(product, () => {
-      console.log("In Callback");
-      console.log(productID);
-      cartObj.getCart((cart) => {
-        res.render("shop/cart", {
-          pageTitle: "Cart",
-          pageName: "cart",
-          cart: cart,
+  //// Code to add product in file , where file as DB
+  //productObj.findProductByID(productID, (product) => {
+  //console.log(productID);
+  // cartObj.addProduct(product, () => {
+  //   console.log("In Callback");
+  //   console.log(productID);
+  //   cartObj.getCart((cart) => {
+  //     res.render("shop/cart", {
+  //       pageTitle: "Cart",
+  //       pageName: "cart",
+  //       cart: cart,
+  //     });
+  //   });
+  // });
+  //});
+
+  //   console.log(
+  //     Object.getOwnPropertyNames(Product).filter(function (p) {
+  //       return Product.associations;
+  //     })
+  //   );
+
+  //   console.log("\nAssociations");
+  //   for (let assoc of Object.keys(Cart.associations)) {
+  //     for (let accessor of Object.keys(Cart.associations[assoc].accessors)) {
+  //       console.log(
+  //         Cart.name + "." + Cart.associations[assoc].accessors[accessor] + "()"
+  //       );
+  //     }
+  //   }
+  ///========================
+  let fetchedCart;
+  let newQuantity = 1;
+  let oldQuantity = 0;
+  let cartID;
+  //User.getCart() // This should work need to check -- Issue4ME-3
+  return Cart.findOne({
+    include: [
+      {
+        model: Product,
+        through: {
+          where: {
+            cartId: req.loggedUserCart.id,
+            productTblId: productID,
+          },
+        },
+      },
+    ],
+  })
+    .then((cart) => {
+      fetchedCart = cart;
+      //console.log(cart.id);
+      //console.log(cart.productTbls.length);
+      console.log(cart.productTbls);
+      console.log("Check for product In cart ");
+      if (cart.productTbls.length > 0) {
+        console.log("Product Exist .. Just Modifing ");
+        console.log(cart.productTbls[0]);
+        oldQuantity = cart.productTbls[0].cartItem.quantity;
+        console.log(cart.productTbls[0].cartItem);
+        console.log(cart.productTbls[0].quantity);
+        console.log(cart.productTbls[0].cartItem.quantity);
+        return cart.productTbls[0].cartItem
+          .update({
+            quantity: oldQuantity + newQuantity,
+          })
+          .then((cart) => {
+            console.log("Update Cart 1");
+            console.log(cart);
+            return Cart.findAll({
+              where: {
+                id: req.loggedUserCart.id,
+              },
+              //attributes: ["id", "userId"],
+              include: { model: Product, as: 'productTbls', required: true, attribute:[] },
+              //raw: true,
+              //nest: true,
+            });
+          })
+          .then((cart) => {
+            console.log("cart 1");
+            console.log(cart);
+            console.log(cart[0]);
+            console.log(cart[0].productTbls);
+            console.log("cart.productTbls 1");
+            //console.log(cart.productTbls);
+            res.render("shop/cart", {
+              pageTitle: "Cart",
+              pageName: "cart",
+              cart: cart[0],
+            });
+          });
+      } else {
+        console.log("Need to add new Product ");
+        return Product.findByPk(productID).then((product) => {
+          console.log("Find product in products Master");
+          console.log(product);
+          return fetchedCart
+            .addProductTbls(product, {
+              through: { id: uuidv4(), quantity: newQuantity },
+            })
+            .then((cart) => {
+              console.log("Update Cart 2");
+              console.log(cart);
+              return Cart.findAll({
+                include: [
+                  {
+                    model: Product,
+                    through: {
+                      where: {
+                        cartId: req.loggedUserCart.id,
+                      },
+                    },
+                  },
+                ],
+              });
+            })
+            .then((cart) => {
+              console.log("cart 2");
+              console.log(cart);
+              console.log("cart.productTbls 2");
+              console.log(cart.productTbls);
+              res.render("shop/cart", {
+                pageTitle: "Cart",
+                pageName: "cart",
+                cart: fetchedCart.productTbls,
+              });
+            });
         });
-      });
+      }
+      /* return cart.productTbls
+        .findAll({ productTblId: productID })
+        // .then((product) => {
+        //   console.log("Available Product");
+        //   console.log(product);
+        //   if (product) {
+        //     oldQuantity = product.quantity;
+        //   }
+        //   newQuantity = oldQuantity + 1;
+        //   if (product) {
+        //     return product;
+        //   } else {
+        //     console.log("Get New Product");
+        //     return Product.findByPk(productID);
+        //   }
+          // if (cart.productTbls.length > 0) {
+          //   product = cart.productTbls[0];
+          // }
+          //   let newQuantity = 1;
+          //   if (product) {
+          //     console.log("Existing product");
+          //     console.log(product);
+          //     console.log(product.cartItem);
+          //     console.log(product.cartItem.quantity);
+          //     const oldQty = product.cartItem.quantity;
+          //     newQuantity = oldQty + 1;
+          //     return product;
+          //   }
+          //   console.log("New product");
+          //   return Product.findByPk(productID);
+        })
+        .then((product) => {
+          console.log("Product in Queue");
+          console.log(product);
+          if (product)
+            return fetchedCart.addProductTbls(product, {
+              through: { id: uuidv4(), quantity: newQuantity },
+            });
+        })
+        .then((fetchedCart) => {
+          console.log("fetchedCart.productTbls");
+          console.log(fetchedCart.productTbls);
+          return Cart.findAll({
+            include: [
+              {
+                model: Product,
+                through: {
+                  where: {
+                    cartId: req.loggedUserCart.id,
+                  },
+                },
+              },
+            ],
+          }).then((cart) => {
+            console.log("cart.productTbls");
+            console.log(cart.productTbls);
+            res.render("shop/cart", {
+              pageTitle: "Cart",
+              pageName: "cart",
+              cart: fetchedCart.productTbls,
+            });
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      //   console.log("Product ---- >");
+      //   console.log(product);
+      //   console.log(product.id);
+      */
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 // Delete selected product
