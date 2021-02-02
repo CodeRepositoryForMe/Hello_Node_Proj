@@ -17,6 +17,8 @@ router.post("/cart", productController.exePostCart);
 
 router.use("/cart", productController.exeGetCart);
 
+router.post("/orders", productController.exePostOrders);
+
 router.use("/orders", productController.exeOrders);
 
 router.use("/checkout", productController.exeCheckout);

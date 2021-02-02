@@ -29,10 +29,18 @@
                 <% } %>
                 <div class="card__content">
                     <h2 class="product__price">Cart Amount : ₹ <%= cart.totalPrice %></h2>
+                    <input type="hidden" name="cartId" value="<%= cart.id %>">
                 </div>
             </div>
             <% } else {%>
                 <h1>No product found</h1>
-        <% } %>    
+        <% } %>  
+        <hr>
+        <div>
+            <form method="POST" action="/orders">
+                <button class="btn" type="submit">Create Order</button>
+                <input type="hidden" value="<%= cart.id%>" name="cartId">
+            </form>
+        </div>  
     </main>
 <%- include('../includes/end.ejs') %>

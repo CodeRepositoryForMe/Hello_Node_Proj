@@ -6,6 +6,8 @@ const Cart = require("../models/cart");
 const User = require("../models/user");
 const { v4: uuidv4 } = require("uuid");
 const Helper = require("../util/helper");
+const sequelize = require("sequelize");
+const Order = require("../models/order");
 
 // Get all products
 exports.exeGetProducts = (req, res, next) => {
@@ -113,22 +115,26 @@ exports.exeShowProductCatelog = (req, res, next) => {
 exports.exeGetCart = (req, res, next) => {
   console.log("Cart page here !!!");
   //// Get all cart products through "Include"
-  return Cart.findOne({
-    include: [
-      {
-        model: Product,
-        through: {
-          where: { cartId: req.loggedUserCart.id },
-        },
-      },
-    ],
+  return Cart.findAll({
+    where: {
+      id: req.loggedUserCart.id,
+    },
+    //attributes: ["id", "userId"],
+    include: {
+      model: Product,
+      as: "productTbls",
+      required: true,
+      attribute: [],
+    },
+    //raw: true,
+    //nest: true,
   })
     .then((cart) => {
       console.log(cart);
-      console.log(cart.id);
+      console.log(cart[0].id);
       res.render("shop/cart", {
         pageTitle: "Cart",
-        cart: cart.productTbls,
+        cart: cart[0],
         pageName: "cart",
       });
     })
@@ -215,7 +221,13 @@ exports.exePostCart = (req, res, next) => {
                 id: req.loggedUserCart.id,
               },
               //attributes: ["id", "userId"],
-              include: { model: Product, as: 'productTbls', required: true, attribute:[] },
+              include: {
+                model: Product,
+                as: "productTbls",
+                required: true,
+                attribute: [],
+                order: sequelize.literal("total DESC"),
+              },
               //raw: true,
               //nest: true,
             });
@@ -248,27 +260,33 @@ exports.exePostCart = (req, res, next) => {
               console.log("Update Cart 2");
               console.log(cart);
               return Cart.findAll({
-                include: [
-                  {
-                    model: Product,
-                    through: {
-                      where: {
-                        cartId: req.loggedUserCart.id,
-                      },
-                    },
-                  },
-                ],
+                where: {
+                  id: req.loggedUserCart.id,
+                },
+                //attributes: ["id", "userId"],
+                include: {
+                  model: Product,
+                  as: "productTbls",
+                  required: true,
+                  attribute: [],
+                },
+                //raw: true,
+                //nest: true,
               });
             })
             .then((cart) => {
               console.log("cart 2");
               console.log(cart);
+              console.log("cart [0] ------");
+              console.log(cart[0]);
+              console.log("cart[0].productTbls =======");
+              console.log(cart[0].productTbls);
               console.log("cart.productTbls 2");
-              console.log(cart.productTbls);
+              //console.log(cart.productTbls);
               res.render("shop/cart", {
                 pageTitle: "Cart",
                 pageName: "cart",
-                cart: fetchedCart.productTbls,
+                cart: cart[0],
               });
             });
         });
@@ -355,14 +373,97 @@ exports.exeDeleteCartProduct = (req, res, next) => {
   console.log("Delete this product !!");
   const productID = req.params.productid;
   console.log(productID);
-  cartObj.deleteProductFromCart(productID, () => {
-    cartObj.getCart((cart) => {
-      res.render("shop/cart", {
-        pageTitle: "Cart",
-        pageName: "cart",
-        cart: cart,
+
+  //   cartObj.deleteProductFromCart(productID, () => {
+  //     cartObj.getCart((cart) => {
+  //       res.render("shop/cart", {
+  //         pageTitle: "Cart",
+  //         pageName: "cart",
+  //         cart: cart,
+  //       });
+  //     });
+  //   });
+  // // //   console.log("\nAssociations");
+  // // //   for (let assoc of Object.keys(User.associations)) {
+  // // //     for (let accessor of Object.keys(
+  // // //         User.associations[assoc].accessors
+  // // //     )) {
+  // // //       console.log(
+  // // //         User.name +
+  // // //           "." +
+  // // //           User.associations[assoc].accessors[accessor] +
+  // // //           "()"
+  // // //       );
+  // // //     }
+  // // //   }
+  console.log("Sart Delete operation");
+  ////// This need to work but ..
+  //   User
+  //     .getCart(req.loggedUserCart.id)
+  //     .then((cart) => {
+  //       return cart.getProducts({ where: { id: productID } });
+  //     })
+  //     .then((products) => {
+  //       const product = products[0];
+  //       return product.cartItem.destroy();
+  //     })
+  //     .then((result) => {
+  //       res.redirect("/cart");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+
+  return Cart.findOne({
+    include: [
+      {
+        model: Product,
+        through: {
+          where: {
+            cartId: req.loggedUserCart.id,
+            productTblId: productID,
+          },
+        },
+      },
+    ],
+  }).then((cart) => {
+    console.log("Find cart product for delete");
+    console.log(cart);
+    console.log(cart.productTbls[0]);
+    console.log(cart.productTbls[0].cartItem);
+    cart.productTbls[0].cartItem
+      .destroy()
+      .then(() => {
+        console.log("Cart Item record deleted ");
+        return Cart.findAll({
+          where: {
+            id: req.loggedUserCart.id,
+          },
+          //attributes: ["id", "userId"],
+          include: {
+            model: Product,
+            as: "productTbls",
+            required: true,
+          },
+          //raw: true,
+          //nest: true,
+        });
+      })
+      .then((cart) => {
+        console.log("cart after delete");
+        console.log(cart);
+        console.log("cart [0] ------");
+        console.log(cart[0]);
+        console.log("cart[0].productTbls =======");
+        console.log(cart[0].productTbls);
+        console.log("cart.productTbls 2");
+        //console.log(cart.productTbls);
+        res.render("shop/cart", {
+          pageTitle: "Cart",
+          pageName: "cart",
+          cart: cart[0],
+        });
       });
-    });
   });
 };
 
@@ -372,6 +473,80 @@ exports.exeOrders = (req, res, next) => {
     pageTitle: "Orders",
     pageName: "orders",
   });
+};
+
+exports.exePostOrders = (req, res, next) => {
+  console.log("Welcome to Order");
+  console.log(req.body.cartId);
+  let fetchedCart;
+  return Cart.findAll({
+    where: {
+      id: req.loggedUserCart.id,
+    },
+    //attributes: ["id", "userId"],
+    include: {
+      model: Product,
+      as: "productTbls",
+      required: true,
+    },
+    //raw: true,
+    //nest: true,
+  })
+    .then((cart) => {
+      fetchedCart = cart;
+      console.log(cart);
+      console.log(cart[0].productTbls);
+      return Order.create({
+        id: uuidv4(),
+        UserId: req.loggedUser.id,
+      }).then((order) => {
+        console.log("Fetched Cart");
+        console.log(fetchedCart[0]);
+        console.log(fetchedCart[0].id);
+        console.log("Cart Product");
+        console.log(fetchedCart[0].productTbls);
+        //console.log(fetchedCart[0].productTbls.map());
+        console.log("Order looks like");
+        console.log(order);
+        //   console.log("\nAssociations");
+        //   for (let assoc of Object.keys(Product.associations)) {
+        //     for (let accessor of Object.keys(
+        //         Product.associations[assoc].accessors
+        //     )) {
+        //       console.log(
+        //         ProOrderItemduct.name +
+        //           "." +
+        //           OrderItem.associations[assoc].accessors[accessor] +
+        //           "()"
+        //       );
+        //     }
+        //   }
+        //  console.log("=========");
+        return order.addProductTbls(
+          fetchedCart[0].productTbls.map((product) => {
+            console.log("product need to add in Order");
+            console.log(product);
+            console.log(product.orderItem);
+            console.log(
+              "product.cartItem.quantity:" + product.cartItem.quantity
+            );
+            product.orderItem = {
+              id: uuidv4(),
+              quantity: product.cartItem.quantity,
+            };
+          })
+        );
+      }).catch((err) => {
+          console.log(err);
+      });
+    })
+    .then((order) => {
+      console.log("Order Createed ");
+      console.log(order);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.exeCheckout = (req, res, next) => {
